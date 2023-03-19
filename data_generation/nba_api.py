@@ -3,11 +3,12 @@ import numpy as np
 from nba_api.stats import endpoints
 
 # list of seasons to pull data from API
-seasons = ["2020-21", "2019-20", "2018-19", "2017-18", "2016-17", "2015-16", "2014-15", "2013-14", "2012-13", "2011-12", "2010-11", "2009-10", "2008-09", "2007-08", "2006-07", "2005-06", "2004-05"]
+seasons = ["2005-06", "2006-07", "2007-08", "2008-09", "2009-10", "2010-11", "2011-12", "2012-13", 
+           "2013-14", "2014-15", "2015-16", "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22"]
 
 def get_initial_table():
     # initialize df with latest full season 21/22
-    df = endpoints.leaguestandings.LeagueStandings(season="2021-22").standings.get_data_frame()[['SeasonID', 'TeamID', 'TeamCity', 'TeamName', 'Conference', 'PlayoffRank', 'WinPCT', 'DiffPointsPG']]
+    df = endpoints.leaguestandings.LeagueStandings(season="2004-05").standings.get_data_frame()[['SeasonID', 'TeamID', 'TeamCity', 'TeamName', 'Conference', 'PlayoffRank', 'WinPCT', 'DiffPointsPG']]
 
     # concatenate all seasons in list to df
     for i in seasons:
