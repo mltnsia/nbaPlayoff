@@ -17,6 +17,29 @@ queries = list(itertools.product(nba_offseasons, keywords))
 # print the list of queries
 #print(queries)
 
+# account for team name changes
+
+#2008-2011 Brooklyn Nets were New Jersey Nets
+queries[2]= (queries[2][0], "NBA New Jersey Nets")
+queries[32]= (queries[32][0], "NBA New Jersey Nets")
+queries[62]= (queries[62][0], "NBA New Jersey Nets")
+queries[92]= (queries[92][0], "NBA New Jersey Nets")
+
+#2008-2012 Charlotte Hornets were Charlotte Bobcats
+queries[3]= (queries[3][0], "NBA Charlotte Bobcats")
+queries[33]= (queries[33][0], "NBA Charlotte Bobcats")
+queries[63]= (queries[63][0], "NBA Charlotte Bobcats")
+queries[93]= (queries[93][0], "NBA Charlotte Bobcats")
+queries[123]= (queries[123][0], "NBA Charlotte Bobcats")
+
+#2008-2013 New Orleans Pelicans were New Orleans Hornets
+queries[18]= (queries[18][0], "NBA New Orleans Hornets")
+queries[48]= (queries[48][0], "NBA New Orleans Hornets")
+queries[78]= (queries[78][0], "NBA New Orleans Hornets")
+queries[108]= (queries[108][0], "NBA New Orleans Hornets")
+queries[138]= (queries[138][0], "NBA New Orleans Hornets")
+queries[168]= (queries[168][0], "NBA New Orleans Hornets")
+
 #Data Preprocessing 
 stop = nltk.download('stopwords')
 stop = stopwords.words('english')
