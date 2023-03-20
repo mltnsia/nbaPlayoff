@@ -16,27 +16,37 @@ def get_initial_table():
         df = pd.concat([df, temp_df])
 
     # change seasonid type to numeric
+    df["SeasonID"] = df["SeasonID"].str[1:]
     df["SeasonID"] = pd.to_numeric(df["SeasonID"])
+
+    ### uncomment to create csv
+    # create teamID to teamName and conference mapping
+    # idNameMapping = df[["TeamID", 'TeamName', 'Conference']][df['SeasonID'] == 2021].set_index('TeamID')
+    # idNameMapping.to_csv('id_name_mapping.csv')
 
     return df
 
 def get_final_table():
+
+    df = get_initial_table()
+
     # playoffrank lag lists that will become columns
     PlayoffRankLag1 = []
     PlayoffRankLag2 = []
     PlayoffRankLag3 = []
+    PlayoffRankLag4 = []
 
     # winpct lag lists that will become columns
     WinPCTLag1 = []
     WinPCTLag2 = []
     WinPCTLag3 = []
+    WinPCTLag4 = []
 
     # diffpointspg lag lists that will become columns
     DiffPointsPGLag1 = []
     DiffPointsPGLag2 = []
     DiffPointsPGLag3 = []
-
-    df = get_initial_table()
+    DiffPointsPGLag4 = []
 
     # 2004/05 was the first season NBA had 30 teams
     # to get 3 lagged years for each team, final season has to be 2007/08
@@ -45,19 +55,19 @@ def get_final_table():
     for i, row in df.iterrows():
         currentTeamID = row.TeamID
         currentSeasonID = row.SeasonID
-        if currentSeasonID >= 22007:
-            for n in range(1, 4):
+        if currentSeasonID >= 2008:
+            for n in range(1, 5):
                 eval(f'PlayoffRankLag{n}').append(df[(df["SeasonID"] == currentSeasonID - n) & (df["TeamID"] == currentTeamID)].iloc[0]["PlayoffRank"]) # append lagged playoff rank into list
                 eval(f'WinPCTLag{n}').append(df[(df["SeasonID"] == currentSeasonID - n) & (df["TeamID"] == currentTeamID)].iloc[0]["WinPCT"]) # append lagged winpct into list
                 eval(f'DiffPointsPGLag{n}').append(df[(df["SeasonID"] == currentSeasonID - n) & (df["TeamID"] == currentTeamID)].iloc[0]["DiffPointsPG"]) # append lagged diffpointspg into list
         else:
-            for n in range(1, 4):
+            for n in range(1, 5):
                 eval(f'PlayoffRankLag{n}').append(None)
                 eval(f'WinPCTLag{n}').append(None)
                 eval(f'DiffPointsPGLag{n}').append(None)
 
     # convert lagged lists into df columns
-    for n in range(1, 4):
+    for n in range(1, 5):
         df[f"PlayoffRankLag{n}"] = eval(f'PlayoffRankLag{n}')
         df[f"WinPCTLag{n}"] = eval(f'WinPCTLag{n}')
         df[f"DiffPointsPGLag{n}"] = eval(f'DiffPointsPGLag{n}')
@@ -73,7 +83,13 @@ def get_final_table():
     df_west = df_nonulls[df_nonulls["Conference"] == "West"]
 
     # drop current playoff rank, winpct, diffpointspg, and conference columns
-    df_east = df_east.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG'])
-    df_west = df_west.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG'])
+    df_east = df_east.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
+    df_west = df_west.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
+    df_merged = df_nonulls.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
 
-    return df_east, df_west
+    ### uncomment to create csv
+    # df_east.to_csv('df_east.csv')
+    # df_west.to_csv('df_west.csv')
+    # df_merged.to_csv('df_merged.csv')
+
+    return df_merged, df_east, df_west
