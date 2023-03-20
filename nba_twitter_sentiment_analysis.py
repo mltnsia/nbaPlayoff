@@ -15,14 +15,14 @@ nba_offseasons = [('2007-06-15', '2007-10-29', '2007'), ('2008-06-18', '2008-10-
 queries = list(itertools.product(nba_offseasons, keywords))
 
 # print the list of queries
-print(queries)
+#print(queries)
 
 #Data Preprocessing 
-stop=nltk.download('stopwords')
+stop = nltk.download('stopwords')
 stop = stopwords.words('english')
 
 #Remove unnecessary characters
-punct =['%','/',':','\\','&amp;','&',';', '?', '\n']
+punct = ['%','/',':','\\','&amp;','&',';', '?', '\n']
 
 def remove_punctuations(text):
     for punctuation in punct:
@@ -34,7 +34,7 @@ dfs = []
 
 i = 0
 # loop over the list and run the code for each pair
-for query in queries[0:10]:
+for query in queries:
     keyword = query[1]
     dates = query[0]
     since_date, until_date, season = dates
