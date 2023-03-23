@@ -19,7 +19,7 @@ def get_initial_table():
     df["SeasonID"] = df["SeasonID"].str[1:]
     df["SeasonID"] = pd.to_numeric(df["SeasonID"])
 
-    ### uncomment to create csv
+    ### uncomment to create mapping csv
     # create teamID to teamName and conference mapping
     # idNameMapping = df[["TeamID", 'TeamName', 'Conference']][df['SeasonID'] == 2021].set_index('TeamID')
     # idNameMapping.to_csv('id_name_mapping.csv')
@@ -73,23 +73,24 @@ def get_final_table():
         df[f"DiffPointsPGLag{n}"] = eval(f'DiffPointsPGLag{n}')
 
     # remove rows with nan values
-    df_nonulls = df[df['PlayoffRankLag1'].notna()]
+    df = df[df['PlayoffRankLag1'].notna()]
 
     # create target column from playoff rank
-    df_nonulls['isPlayoff'] = (df_nonulls['PlayoffRank'] <= 8).astype(int)
+    df['isPlayoff'] = (df['PlayoffRank'] <= 8).astype(int)
 
     # split df into east and west conferences
-    df_east = df_nonulls[df_nonulls["Conference"] == "East"]
-    df_west = df_nonulls[df_nonulls["Conference"] == "West"]
+    # df_east = df[df["Conference"] == "East"]
+    # df_west = df[df["Conference"] == "West"]
 
     # drop current playoff rank, winpct, diffpointspg, and conference columns
-    df_east = df_east.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
-    df_west = df_west.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
-    df_merged = df_nonulls.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
+    # df_east = df_east.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
+    # df_west = df_west.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
+    df = df.drop(columns=['PlayoffRank', 'Conference', 'WinPCT', 'DiffPointsPG', 'TeamCity', 'TeamName']).reset_index(drop=True)
 
     ### uncomment to create csv
+    # df.to_csv('df.csv')
+
     # df_east.to_csv('df_east.csv')
     # df_west.to_csv('df_west.csv')
-    # df_merged.to_csv('df_merged.csv')
 
-    return df_merged, df_east, df_west
+    return df
